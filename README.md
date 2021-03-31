@@ -16,50 +16,39 @@ Napisać program, który ma za zadanie skopiować pliki lub katalogi z dysku. Da
 
 FAT (File allocation table) to typ architektury komputera  wykorzystuje system plików tabeli indeksów, tabeli alokacji plików , przydzielanej statycznie w czasie formatowania. Tabela zawiera:
 
-wpisy dla każdego klastra , ciągłego obszaru pamięci dyskowej. 
+- wpisy dla każdego klastra , ciągłego obszaru pamięci dyskowej. 
 
-Każda pozycja zawiera albo numer następnego klastra w pliku, albo znacznik wskazujący koniec pliku, nieużywane miejsce na dysku lub specjalne zarezerwowane obszary dysku.
+- Każda pozycja zawiera albo numer następnego klastra w pliku, albo znacznik wskazujący koniec pliku, nieużywane miejsce na dysku lub specjalne zarezerwowane obszary dysku.
 
-Katalog główny dysku zawiera numer pierwszego klastra każdego pliku w tym katalogu; 
+- Katalog główny dysku zawiera numer pierwszego klastra każdego pliku w tym katalogu; 
  
-system operacyjny może następnie przechodzić przez tabelę FAT, szukając numeru klastra każdej kolejnej części pliku dysku jako łańcucha klastrów, aż do osiągnięcia końca pliku.
+- system operacyjny może następnie przechodzić przez tabelę FAT, szukając numeru klastra każdej kolejnej części pliku dysku jako łańcucha klastrów, aż do osiągnięcia końca pliku.
 
  W podobny sposób podkatalogi są implementowane jako specjalne pliki zawierające wpisy katalogów odpowiednich plików.
 
 ## Układ FAT16:
 
 
-Region
-Rozmiar
-Zawartość
-Sektory zastrzeżone 
-(liczba zarezerwowanych sektorów)
-Sektor rozruchowy,
-Więcej zarezerwowanych sektorów
-Region FAT
-(liczba FAT) * (sektory na FAT)
-Tabela alokacji plików nr 1
-Tabela alokacji plików nr 2
-Region katalogu głównego
-(liczba pozycji root *bajtów na pozycję)/ bajtów na sektor)
-Katalog główny
-Region danych
-(liczba klastrów) * sektory na klaster)
-Region danych (do końca partycji lub dysku)
+| Region | Rozmiar | Zawartość | 
+| --- | --- | --- | 
+| Sektory zastrzeżone |(liczba zarezerwowanych sektorów) | Sektor rozruchowy,Więcej zarezerwowanych sektorów |
+| Region FAT | (liczba FAT) * (sektory na FAT) | Tabela alokacji plików nr 1, Tabela alokacji plików nr 2|
+| Region katalogu głównego | (liczba pozycji root *bajtów na pozycję)/ bajtów na sektor) | Katalog główny |
+| Region danych | (liczba klastrów) * sektory na klaster) | Region danych (do końca partycji lub dysku) |
 
 
 
 
-System plików FAT16 składa się z czterech regionów: 
+## System plików FAT16 składa się z czterech regionów: 
 
-Sektory zastrzeżone
+### Sektory zastrzeżone
 Pierwszym zarezerwowanym sektorem (sektor logiczny 0) jest sektor rozruchowy (zwany także woluminowym rekordem rozruchowym lub po prostu VBR ). Zawiera obszar zwany blokiem parametrów systemu BIOS ( BPB ), który zawiera podstawowe informacje o systemie plików, w szczególności jego typ i wskaźniki lokalizacji innych sekcji, i zwykle zawiera kod modułu ładującego rozruch systemu operacyjnego .
-Region FAT
+### Region FAT
 Zwykle zawiera dwie kopie tabeli alokacji plików w celu sprawdzenia nadmiarowości, choć rzadko używane, nawet przez narzędzia do naprawy dysków.
 Są to mapy regionu danych, wskazujące, które klastry są używane przez pliki i katalogi. W FAT12 i FAT16 natychmiast podążają za zarezerwowanymi sektorami.
-Region katalogu głównego
+### Region katalogu głównego
 Jest to tabela katalogów, która przechowuje informacje o plikach i katalogach znajdujących się w katalogu głównym. Nakłada na katalog główny stały maksymalny rozmiar, który jest wstępnie przydzielany podczas tworzenia tego woluminu. 
-Region danych
+### Region danych
 Tutaj przechowywane są rzeczywiste dane pliku i katalogu, które zajmują większość partycji.
 
 FAT używa format little-endian dla wszystkich pozycji w nagłówku.
